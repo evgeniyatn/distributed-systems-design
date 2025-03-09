@@ -12,7 +12,6 @@ messages_service = 'http://localhost:5002/messages'
 MAX_RETRIES = 3
 RETRY_DELAY = 2
 
-# Функція для логування повідомлення через GRPC із retry
 def log_message_with_retry(msg_id, msg):
     for attempt in range(MAX_RETRIES):
         try:
@@ -43,11 +42,10 @@ def handle_req():
             stub = logging_pb2_grpc.LoggingServiceStub(channel)
             log_response = stub.GetLogs(logging_pb2.Empty())
 
-        # Отримуємо відповідь від messages-service через HTTP
         msg_response = requests.get(messages_service)
 
         return jsonify({
-            "logs": list(log_response.logs),  # Приведення до списку
+            "logs": list(log_response.logs),
             "message_service": msg_response.text
         }), 200
 
